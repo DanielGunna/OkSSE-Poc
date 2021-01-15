@@ -1,7 +1,9 @@
 package com.gunna.okssepoc
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.here.oksse.OkSse
@@ -12,6 +14,8 @@ import okhttp3.Response
 
 class MainActivity : AppCompatActivity() {
 
+
+    private val tvMessage  by lazy {   findViewById<TextView>(R.id.tvMessage)}
     private var counter: Int = 0;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,9 +26,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun notifyEvent(msg: String){
+    private fun notifyEvent(serverMessage: String){
+        Log.e("SSE", serverMessage)
         runOnUiThread {
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+           tvMessage.text = serverMessage
         }
     }
 
@@ -34,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         okSse.newServerSentEvent(request, object : ServerSentEvent.Listener {
             override fun onOpen(sse: ServerSentEvent?, response: Response?) {
                 notifyEvent("Conexão aberta ")
-
             }
 
             override fun onMessage(sse: ServerSentEvent?, id: String?, event: String?, message: String?) {
@@ -43,22 +47,22 @@ class MainActivity : AppCompatActivity() {
 
             override fun onComment(sse: ServerSentEvent?, comment: String?) {
                 notifyEvent("Comment recebido $comment")
-
             }
 
             override fun onRetryTime(sse: ServerSentEvent?, milliseconds: Long): Boolean {
-                return false
+                return true
             }
 
             override fun onRetryError(sse: ServerSentEvent?, throwable: Throwable?, response: Response?): Boolean {
-                return false
+                return true
             }
 
             override fun onClosed(sse: ServerSentEvent?) {
+                notifyEvent("Closed")
             }
 
             override fun onPreRetry(sse: ServerSentEvent?, originalRequest: Request?): Request {
-                return Request.Builder().build()
+                return request
             }
         })
 

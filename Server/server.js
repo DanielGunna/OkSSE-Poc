@@ -35,7 +35,7 @@ function eventsHandler(req, res, next) {
 }
 // Iterate clients list and use write res object method to send new nest
 function sendEventsToAll(newNest) {
-  clients.forEach(c => c.res.write(`data: ${JSON.stringify(newNest)}\n\n)`));
+  clients.forEach(c => c.res.write(`data: ${JSON.stringify(newNest)}\n\n`));
 }
 // Middleware for POST /nest endpoint
 async function addNest(req, res, next) {
