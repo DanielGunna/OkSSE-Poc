@@ -1,14 +1,9 @@
 package com.gunna.okssepoc
 
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.here.oksse.OkSse
 import com.here.oksse.ServerSentEvent
 import okhttp3.Request
@@ -36,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private fun configureSse() {
         val request: Request = Request.Builder().method("GET", null).url("http://10.0.2.2:3000/events").build()
         val okSse = OkSse()
-        val sse: ServerSentEvent = okSse.newServerSentEvent(request, object : ServerSentEvent.Listener {
+        okSse.newServerSentEvent(request, object : ServerSentEvent.Listener {
             override fun onOpen(sse: ServerSentEvent?, response: Response?) {
                 notifyEvent("Conexão aberta ")
 
@@ -65,25 +60,8 @@ class MainActivity : AppCompatActivity() {
             override fun onPreRetry(sse: ServerSentEvent?, originalRequest: Request?): Request {
                 return Request.Builder().build()
             }
-
         })
 
-
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 }
